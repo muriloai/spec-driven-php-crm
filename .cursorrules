@@ -1,0 +1,122 @@
+# Regras para Geração de Mensagens de Commit (Git)
+
+Quando acionado para gerar mensagens de commit ou sugerir comandos no terminal, siga rigorosamente as instruções abaixo:
+
+---
+
+## 1. Estilo, Linguagem e Tom
+
+- **Idioma:** 100% Português do Brasil (pt-BR) com ortografia e acentuação corretas.
+- **Tom prático de desenvolvimento:** Comunicação direta, limpa e objetiva, como um desenvolvedor sênior escreve para sua equipe no dia a dia.
+- **Linguagem livre de clichês de IA:**
+  - NÃO use termos como "paradigma", "mudança de paradigma" ou "visão holística". Use "como era feito", "como é feito agora", "diferenças práticas" ou "evolução".
+  - NÃO use termos floreados como "anatomia", "artesanal", "ecossistema robusto", "intrinsecamente" ou "cidadão de primeira classe". Concentre-se em código, regras de negócio e impacto real.
+  - NÃO use travessão (—) no meio de frases. Prefira vírgula, dois-pontos ou ponto final.
+- **Proibição estrita de tags XML/HTML (Sem `</message>`):**
+  - NUNCA insira tags como `<message>`, `</message>`, `<commit>`, `</commit>` ou similares no texto final do commit.
+  - O título NUNCA deve conter ou terminar com `</message>`.
+  - O corpo do commit NUNCA deve conter tags `<message>` ou `</message>` repetidas em linhas ou parágrafos.
+  - Se a interface interna do Cursor exigir que a resposta fique delimitada por tags, encapsule a mensagem inteira (título + corpo completo) em UMA ÚNICA tag:
+    `<message>tipo(escopo): descricao\n\ncorpo aqui</message>`
+    e JAMAIS feche a tag logo após o título nem coloque tags adicionais nas linhas do corpo.
+- **Sem referências a planejamento interno:** Nunca cite arquivos como `plan.md`, `task.md`, prompts, IDs de sessão ou issues fictícias.
+- **Execução manual:** O assistente apenas sugere o texto formatado. Nunca execute comandos de commit ou push automaticamente sem consentimento explícito.
+
+---
+
+## 2. Formato do Título (Subject Line)
+
+Siga o padrão **Conventional Commits**:
+
+```text
+tipo(escopo): descricao curta no imperativo, minusculas, sem ponto final
+```
+
+- **Sem tags no título:** O título NUNCA deve conter `</message>`, `<message>` ou qualquer tag XML.
+- **Tamanho:** Idealmente até 50 caracteres (limite absoluto de 60 caracteres para evitar quebras no histórico do Git/GitHub).
+- **Concisão:** De 4 a 7 palavras no máximo. Detalhes específicos de arquivos pertencem exclusivamente ao corpo da mensagem.
+- **Verbo no imperativo:** Comece sempre com verbo de ação em minúsculas (ex.: `adicionar`, `corrigir`, `atualizar`, `remover`, `refatorar`, `otimizar`).
+- **Pontuação:** Sem ponto final e sem reticências.
+
+### Tipos Permitidos
+
+- `feat`: Nova funcionalidade ou recurso para o usuário/sistema.
+- `fix`: Correção de bug, falha de validação ou erro em tempo de execução.
+- `refactor`: Reestruturação de código sem alteração no comportamento externo.
+- `perf`: Alteração exclusiva para ganho de desempenho ou consumo de recursos.
+- `test`: Criação, ajuste ou manutenção de testes automatizados.
+- `docs`: Modificações apenas em documentações, guias ou READMEs.
+- `chore`: Atualização de dependências, scripts de apoio ou ferramentas de build.
+- `ci`: Alterações em pipelines de CI/CD e automações de deploy.
+
+### Escopos
+
+O escopo deve representar o **módulo, serviço, camada ou domínio** impactado (em minúsculas, usando hífen se composto):
+
+- Exemplos: `auth`, `api`, `checkout`, `database`, `config`, `ui`, `queue`, `deps`.
+
+---
+
+## 3. Estrutura do Corpo da Mensagem (Body)
+
+Pule uma linha em branco após o título. Organize o conteúdo nas seguintes seções:
+
+1. **Contexto Prático**:
+   - Parágrafo curto (2 a 3 linhas) explicando o que foi feito e o motivo da alteração.
+
+2. **Diferenças Práticas / Evolução** _(obrigatório em migrações e refatorações; opcional em novas features isoladas)_:
+   - `* Abordagem anterior`: como o fluxo operava ou estava estruturado antes.
+   - `* Nova abordagem`: como opera agora e qual ganho imediato entrega.
+
+3. **Principais Alterações**:
+   - Lista com marcadores (`-`) detalhando as ações concretas de código, contratos ou arquivos modificados.
+
+---
+
+## 4. Exemplos Modelos
+
+### Modelo 1: Refatoração / Migração Arquitetural
+
+```text
+refactor(auth): migrar sessao em memoria para tokens jwt
+
+Substitui o controle de sessao baseado em estado local por autenticacao stateless para permitir escalabilidade horizontal da api.
+
+Diferencas Praticas:
+* Abordagem anterior: Sessao gravada na memoria do processo, impedindo balanceamento de carga entre multiplas instancias sem sessao pegajosa (sticky session).
+* Nova abordagem: Autenticacao via JWT assinado com validacao assincrona no middleware, tornando as requisicoes independentes de estado no servidor.
+
+Principais Alteracoes:
+- Middleware de autenticacao para validacao de tokens nos endpoints protegidos.
+- Rota de login atualizada para emitir access token e refresh token.
+- Remocao da dependencia de armazenamento em sessao local e dados volatilizados.
+```
+
+### Modelo 2: Nova Funcionalidade
+
+```text
+feat(billing): adicionar exportacao de faturas em pdf
+
+Permite aos clientes baixar o historico consolidado de faturamento diretamente pelo painel do usuario.
+
+Principais Alteracoes:
+- Servico responsavel pela geracao e compilacao do layout do documento.
+- Rota para download assincrono de faturas com controle de taxa de requisicoes.
+- Tratamento de excecoes para casos de faturas pendentes ou dados incompletos.
+```
+
+### Modelo 3: Correção de Bug
+
+```text
+fix(checkout): impedir cobranca duplicada ao clicar no botao
+
+Corrige problema de envio concorrente de pedidos durante instabilidade de conexao no momento do pagamento.
+
+Diferencas Praticas:
+* Abordagem anterior: O botao permanecia ativo enquanto aguardava resposta do gateway, permitindo cliques repetidos do cliente.
+* Nova abordagem: O envio gera uma chave de idempotencia imediata e desabilita a acao na interface ate a conclusao da transacao.
+
+Principais Alteracoes:
+- Bloqueio de cliques repetidos durante o processamento do pagamento.
+- Envio de header de idempotencia nas chamadas para a API de cobranca.
+```
