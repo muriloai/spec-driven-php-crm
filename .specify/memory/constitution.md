@@ -1,50 +1,311 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Version change: N/A (template inicial não preenchido) → 1.0.0
+- Modified principles:
+  - [PRINCIPLE_1_NAME] → Artigo I. Idioma e Clareza
+  - [PRINCIPLE_2_NAME] → Artigo II. Simplicidade e Organização
+  - [PRINCIPLE_3_NAME] → Artigo III. Segurança, Privacidade e Segredos
+  - [PRINCIPLE_4_NAME] → Artigo IV. Integridade dos Dados
+  - [PRINCIPLE_5_NAME] → Artigo V. Confiabilidade e Operação
+- Added sections:
+  - Artigo VI. Qualidade e Evidências
+  - Artigo VII. Experiência de Uso e Desempenho
+  - Artigo VIII. Dependências e Compatibilidade
+  - Artigo IX. Living Spec e Rastreabilidade
+  - Artigo X. Governança Compartilhada e Exceções
+  - Contexto Técnico Vigente e Decisões Pendentes
+  - Diretrizes Condicionais para Capacidades Futuras
+- Removed sections: Nenhuma
+- Templates / artefatos verificados:
+  - ✅ .specify/memory/constitution.md (criado na versão 1.0.0)
+  - ✅ .cursorrules (preservado; compatível com Artigo I e Artigo IX)
+- Follow-up TODOs / Pendências técnicas (aguardando definição em specs/planos futuros):
+  - TODO(STACK_PHP_VERSION): Definir versão alvo do PHP e extensões obrigatórias
+  - TODO(FRAMEWORK_OR_ARCH): Definir uso de framework ou PHP puro e estrutura de diretórios
+  - TODO(DATABASE_ENGINE): Definir SGBD, estratégia de conexão e ferramenta de migrações
+  - TODO(QUALITY_TOOLCHAIN): Definir comandos de testes, análise estática e verificação de estilo
+  - TODO(HOSTING_AND_ENV): Definir ambiente de execução, servidor web e estratégia de backup
+-->
 
-## Core Principles
+# Constituição do Projeto spec-driven-php-crm
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+## Princípios Fundamentais
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### Artigo I. Idioma e Clareza
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+- **OBRIGATÓRIO**: Toda documentação produzida para o projeto DEVE ser escrita em português
+  brasileiro (`pt-BR`), abrangendo esta constituição, especificações (`spec.md`), planos de
+  implementação (`plan.md`), listas de tarefas (`tasks.md`), registros de decisão, checklists,
+  mensagens de commit (conforme `.cursorrules`) e relatórios de validação.
+- **OBRIGATÓRIO**: Identificadores técnicos de código, nomes de APIs, pacotes, comandos de
+  terminal, variáveis de ambiente e caminhos de arquivos DEVEM ser preservados no idioma original
+  sempre que a tradução comprometer sua precisão ou execução.
+- **OBRIGATÓRIO**: Os mesmos termos de negócio DEVEM ser utilizados de forma consistente nas
+  especificações, no código-fonte, no esquema de dados e na interface do usuário. Conceitos de
+  domínio que possam gerar ambiguidade ou confusão DEVEM ser explicitamente definidos na spec
+  correspondente antes da implementação.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**Racional**: A padronização em português brasileiro com vocabulário único elimina ruídos de
+interpretação entre requisitos e implementação, enquanto a preservação de termos técnicos evita
+ambiguidades operacionais.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### Artigo II. Simplicidade e Organização
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+- **OBRIGATÓRIO (KISS)**: Deve-se sempre escolher a solução mais simples que satisfaça
+  integralmente os requisitos confirmados.
+- **OBRIGATÓRIO (YAGNI)**: É PROIBIDO implementar capacidades, parâmetros, tabelas, pontos de
+  extensão ou estruturas arquiteturais para necessidades futuras ainda não confirmadas em spec.
+- **OBRIGATÓRIO (DRY com critério)**: Regras de negócio compartilhadas DEVEM ter representação
+  única, evitando duplicação entre interface, controllers, tarefas agendadas e integrações. Não se
+  DEVE criar abstrações prematuras apenas por semelhança superficial de código.
+- **OBRIGATÓRIO (SOLID pragmático)**: As classes e módulos DEVEM manter responsabilidades claras,
+  dependências explícitas e contratos coerentes, sem exigir a criação sistemática de interfaces ou
+  camadas intermediárias para todas as estruturas quando não houver variação real.
+- **OBRIGATÓRIO**: As regras de negócio DEVEM permanecer separadas da camada de apresentação e dos
+  detalhes de infraestrutura (acesso a banco, transporte HTTP, sistema de arquivos e serviços
+  externos).
+- **OBRIGATÓRIO**: É PROIBIDO impor DDD, Clean Architecture, CQRS, microsserviços, Event Sourcing
+  ou outros padrões complexos sem necessidade técnica e de negócio demonstrada e aprovada.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+**Racional**: O controle rigoroso de complexidade reduz o custo de manutenção e impede que
+abstrações especulativas dificultem a evolução do sistema.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### Artigo III. Segurança, Privacidade e Segredos
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- **OBRIGATÓRIO**: Todas as entradas externas DEVEM ser validadas no servidor quanto a formato,
+  tipo, tamanho, limites e regras de negócio, independentemente de validações existentes no
+  cliente.
+- **OBRIGATÓRIO**: A autorização DEVE ser verificada explicitamente em cada operação protegida e
+  para cada recurso acessado. O sistema DEVE aplicar o princípio do menor privilégio e negar o
+  acesso por padrão (`deny by default`) na ausência de permissão explícita.
+- **OBRIGATÓRIO**: O sistema DEVE empregar mecanismos nativos ou consolidados da stack para
+  autenticação, hash seguro de senhas, proteção de sessões e mitigação de vulnerabilidades web
+  aplicáveis (incluindo SQL Injection, XSS, CSRF e fixation/hijacking de sessão).
+- **OBRIGATÓRIO**: É PROIBIDO versionar credenciais, tokens, chaves privadas, arquivos `.env` com
+  segredos, dumps de banco ou dados reais de clientes. Arquivos de exemplo de configuração DEVEM
+  conter exclusivamente valores fictícios e seguros.
+- **OBRIGATÓRIO**: Segredos DEVEM ser mantidos fora do código-fonte, carregados a partir da
+  configuração do ambiente e NUNCA expostos em logs, respostas de API/interface, documentação ou
+  mensagens de erro.
+- **OBRIGATÓRIO**: O sistema DEVE coletar, exibir e registrar apenas os dados pessoais estritamente
+  necessários à finalidade definida na spec. Testes automatizados ou manuais DEVEM utilizar apenas
+  dados sintéticos ou adequadamente anonimizados.
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+**Racional**: Um CRM lida com informações comerciais e pessoais sensíveis; segurança e privacidade
+são requisitos estruturais inegociáveis desde a primeira linha de código.
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+### Artigo IV. Integridade dos Dados
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+- **OBRIGATÓRIO**: Invariantes de negócio DEVEM ser garantidas tanto por validações na aplicação
+  quanto por restrições apropriadas no banco de dados (chaves estrangeiras, obrigatoriedade `NOT
+  NULL`, tipos adequados, checks e índices de unicidade quando exigidos pelo domínio).
+- **OBRIGATÓRIO**: Operações que envolvam múltiplas alterações dependentes entre si DEVEM ser
+  executadas dentro de transações ACID, garantindo conclusão integral ou reversão conjunta. O
+  código NÃO DEVE presumir que o rollback de banco desfaz chamadas externas já disparadas.
+- **OBRIGATÓRIO**: Fluxos sujeitos a alterações simultâneas DEVEM tratar concorrência de forma
+  explícita (por exemplo, bloqueio otimista ou pessimista conforme o caso), impedindo perda
+  silenciosa de atualizações (`lost updates`).
+- **OBRIGATÓRIO**: Regras de unicidade e detecção de duplicidade DEVEM ser definidas na spec
+  conforme a regra real do negócio. É PROIBIDO presumir sem confirmação que atributos como nome ou
+  e-mail identificam unicamente um cliente ou contato.
+- **OBRIGATÓRIO**: Toda alteração estrutural de banco ou transformação de dados DEVE ser versionada
+  por migrações ou scripts controlados. Migrações já aplicadas em ambientes compartilhados NÃO
+  DEVEM ser editadas retroativamente para alterar seu efeito.
+- **OBRIGATÓRIO**: Mudanças com risco de perda ou alteração destrutiva de dados DEVEM documentar
+  previamente o impacto, a estratégia de execução e o procedimento de recuperação. Não se DEVE
+  presumir que toda migração possui reversão automática sem perda.
+
+**Racional**: A confiabilidade de um CRM depende diretamente da consistência, rastreabilidade e
+recuperabilidade dos dados persistidos.
+
+### Artigo V. Confiabilidade e Operação
+
+- **OBRIGATÓRIO**: Falhas DEVEM ser tratadas explicitamente. É PROIBIDO silenciar exceções ou
+  reportar sucesso ao usuário ou chamador quando uma operação falhar total ou parcialmente.
+- **OBRIGATÓRIO**: Operações sujeitas a repetição (reenvio de formulários, retentativas de rede,
+  webhooks ou tarefas agendadas) DEVEM utilizar mecanismos de idempotência ou deduplicação sempre
+  que efeitos duplicados forem prejudiciais ao negócio.
+- **OBRIGATÓRIO**: Quando houver integrações externas, a implementação DEVE definir limites de
+  tempo (`timeouts`), política controlada de novas tentativas (`retries`) e tratamento explícito de
+  falhas parciais, evitando retentativas ilimitadas e repetição insegura de efeitos externos.
+- **OBRIGATÓRIO**: O sistema DEVE produzir logs estruturados ou claros o suficiente para
+  diagnóstico operacional, identificando o contexto da operação e omitindo ou mascarando dados
+  sensíveis e segredos.
+- **OBRIGATÓRIO**: As specs DEVEM definir quais ações críticas de negócio ou segurança exigem
+  trilha de auditoria, registrando no mínimo autor, data/hora, recurso afetado e ação realizada, com
+  proteção do histórico contra acesso ou adulteração indevidos.
+- **OBRIGATÓRIO**: Antes de iniciar operação com dados reais, a estratégia de backup, o
+  procedimento de restauração e a evidência prática de teste de recuperação DEVEM estar
+  documentados e validados.
+
+**Racional**: Sistemas de negócio precisam ter comportamento previsível sob falha e capacidade
+comprovada de diagnóstico, auditoria e recuperação.
+
+### Artigo VI. Qualidade e Evidências
+
+- **OBRIGATÓRIO**: Regras de negócio críticas, controles de autorização e a integridade dos fluxos
+  criados ou alterados DEVEM ser verificados por testes automatizados.
+- **OBRIGATÓRIO**: Toda correção de bug DEVE incluir teste automatizado de regressão quando viável.
+  Quando a automação não for tecnicamente viável, o responsável DEVE registrar a justificativa e a
+  evidência da verificação alternativa executada.
+- **OBRIGATÓRIO**: A suíte de testes DEVE priorizar cenários relevantes de negócio, casos de borda,
+  limites e caminhos de falha. Não se DEVE adotar um percentual arbitrário de cobertura de código
+  como prova isolada de qualidade.
+- **OBRIGATÓRIO**: O plano de implementação (`plan.md`) DEVE especificar os comandos exatos e
+  reproduzíveis para execução de testes, análise estática e verificação de estilo apropriados à
+  stack definida.
+- **OBRIGATÓRIO**: Todas as verificações aplicáveis DEVEM ser efetivamente executadas antes de
+  declarar uma tarefa ou entrega como concluída. O relatório de entrega DEVE informar os comandos
+  executados, os resultados obtidos, eventuais falhas e quaisquer verificações não executadas com
+  seus respectivos impedimentos.
+- **OBRIGATÓRIO**: É PROIBIDO desativar verificações, suprimir alertas sem justificativa técnica,
+  enfraquecer asserções de testes ou alterar critérios de aceite da spec apenas para forçar a
+  aprovação de uma entrega.
+
+**Racional**: Qualidade verificável baseia-se em evidências reais e reproduzíveis de funcionamento
+nos cenários críticos, e não em métricas artificiais ou declarações não comprovadas.
+
+### Artigo VII. Experiência de Uso e Desempenho
+
+- **OBRIGATÓRIO**: A interface DEVE manter padrões consistentes de navegação, estrutura de
+  formulários, estados de carregamento e mensagens de feedback em todo o sistema.
+- **OBRIGATÓRIO**: Os fluxos implementados DEVEM exibir mensagens de erro claras e compreensíveis
+  para o usuário, preservar os dados já preenchidos no formulário em caso de erro de validação
+  sempre que seguro e permitir operação completa por teclado.
+- **OBRIGATÓRIO**: Ações destrutivas ou irreversíveis DEVEM exigir confirmação ou proteção
+  proporcional ao risco, informando claramente ao usuário as consequências da operação antes de sua
+  efetivação.
+- **OBRIGATÓRIO**: Listagens, buscas, relatórios e processamentos em lote potencialmente volumosos
+  DEVEM ser paginados ou limitados. A implementação DEVE evitar consultas repetitivas (como o
+  problema `N+1`) e o carregamento desnecessário de registros ou colunas em memória.
+- **OBRIGATÓRIO**: Metas de desempenho DEVEM ser definidas nas specs apenas quando forem
+  relevantes para o fluxo especificado e verificadas com volume de dados representativo. É PROIBIDO
+  inventar metas numéricas arbitrárias sem fundamentação no negócio ou na operação.
+
+**Racional**: Produtividade operacional em um CRM exige interface previsível, acessível por
+teclado, segura contra erros acidentais e responsiva diante do crescimento da base de dados.
+
+### Artigo VIII. Dependências e Compatibilidade
+
+- **OBRIGATÓRIO**: Toda nova dependência externa DEVE ser justificada pela necessidade concreta que
+  atende no escopo aprovado.
+- **OBRIGATÓRIO**: Antes de adicionar ou substituir qualquer dependência direta, o agente ou
+  desenvolvedor DEVE apresentar ao responsável pelo projeto: finalidade, alternativas avaliadas
+  (incluindo solução nativa), estado de manutenção, licença e impactos relevantes, aguardando
+  aprovação explícita antes de instalá-la ou incluí-la no manifesto.
+- **OBRIGATÓRIO**: Deve-se priorizar recursos nativos da linguagem/plataforma, bibliotecas oficiais
+  e pacotes reconhecidos e ativamente mantidos. Popularidade isolada (número de downloads ou
+  estrelas) NÃO é critério suficiente para adoção.
+- **OBRIGATÓRIO**: Os arquivos de manifesto e de resolução de versões (`lockfiles`) aplicáveis à
+  stack DEVEM ser versionados no Git para assegurar instalações determinísticas e reproduzíveis.
+- **OBRIGATÓRIO**: É PROIBIDO alterar a stack tecnológica, versões principais (`major`), contratos
+  públicos ou requisitos de infraestrutura sem explicitar previamente o impacto e obter aprovação
+  formal do responsável pelo projeto.
+
+**Racional**: O controle estrito de dependências protege o projeto contra riscos de cadeia de
+suprimentos, incompatibilidades de licença e obsolescência prematura.
+
+### Artigo IX. Living Spec e Rastreabilidade
+
+- **OBRIGATÓRIO**: O projeto adota o modelo de **Living Spec** como política oficial de manutenção
+  das especificações: cada spec aprovada representa o contrato vigente da funcionalidade que
+  descreve.
+- **OBRIGATÓRIO**: Qualquer mudança no comportamento pretendido do sistema DEVE atualizar primeiro
+  a spec correspondente. O plano (`plan.md`) e a lista de tarefas (`tasks.md`) DEVEM ser alinhados
+  com a spec atualizada antes do início ou alteração da implementação.
+- **OBRIGATÓRIO**: Novas funcionalidades com escopo próprio DEVEM receber especificações próprias
+  em diretórios dedicados, sendo PROIBIDO consolidar automaticamente todo o sistema em uma única
+  spec monolítica.
+- **OBRIGATÓRIO**: O histórico de evolução DEVE ser preservado no Git. Antes de substituir ou
+  reestruturar planos ou tarefas existentes, as decisões técnicas e justificativas que continuem
+  relevantes DEVEM permanecer registradas.
+- **OBRIGATÓRIO**: É PROIBIDO alterar uma spec apenas para legitimar retrospectivamente um
+  comportamento incorreto ou bug encontrado no código. Mudanças no contrato funcional exigem
+  decisão explícita de produto/negócio.
+- **OBRIGATÓRIO**: As listas de tarefas DEVEM manter tarefas já concluídas claramente distinguíveis
+  do trabalho novo ou pendente. Nenhuma tarefa DEVE ser marcada como concluída sem a verificação
+  efetiva do seu resultado.
+
+**Racional**: Manter especificações vivas e sincronizadas com o código garante que a documentação
+continue sendo uma fonte confiável da verdade ao longo de todo o ciclo de vida do produto.
+
+### Artigo X. Governança Compartilhada e Exceções
+
+- **OBRIGATÓRIO**: Esta constituição é o documento normativo compartilhado e vinculante para todos
+  os agentes de IA (incluindo **Antigravity** e **Codex**) e colaboradores humanos que atuem neste
+  repositório.
+- **OBRIGATÓRIO**: Sempre que houver conflito entre uma solicitação pontual e as regras desta
+  constituição, o conflito DEVE ser explicitado imediatamente ao responsável pelo projeto para
+  tomada de decisão consciente. É PROIBIDO ignorar silenciosamente quer a constituição, quer a
+  solicitação do usuário.
+- **OBRIGATÓRIO**: Exceções temporárias ou permanentes a qualquer regra desta constituição exigem
+  aprovação explícita e registro documentado contendo: motivo da exceção, escopo exato de
+  aplicação, riscos assumidos e condição ou prazo de revisão.
+
+**Racional**: Regras de governança unificadas evitam divergência de comportamento entre diferentes
+agentes e ferramentas, garantindo decisões transparentes diante de trade-offs.
+
+## Contexto Técnico Vigente e Decisões Pendentes
+
+A inspeção do repositório na data desta versão confirma o seguinte estado real:
+
+- **Configuração presente**:
+  - Repositório Git inicializado como `spec-driven-php-crm`.
+  - Estrutura Spec Kit (`v1.2.2`) configurada em `.specify/` com scripts PowerShell (`.ps1`) e
+    integração de skills em `.agents/skills/`.
+  - Regras de padronização de mensagens de commit em `.cursorrules` (Conventional Commits em
+    português brasileiro).
+- **Decisões técnicas ainda não definidas (registradas como pendências)**:
+  - **Linguagem e Runtime (`TODO(STACK_PHP_VERSION)`)**: Embora o nome do repositório indique PHP,
+    não há `composer.json`, arquivos `.php` ou versão do interpretador e extensões definidas.
+  - **Arquitetura de Aplicação e Framework (`TODO(FRAMEWORK_OR_ARCH)`)**: Não há definição sobre uso
+    de framework específico, microframework ou PHP sem framework, nem convenção de diretórios de
+    código-fonte.
+  - **Banco de Dados e Migrações (`TODO(DATABASE_ENGINE)`)**: Não há SGBD, driver de conexão ou
+    ferramenta de migração definidos.
+  - **Ferramentas de Qualidade (`TODO(QUALITY_TOOLCHAIN)`)**: Não há suíte de testes, analisador
+    estático ou verificador de estilo configurados.
+  - **Hospedagem e Operação (`TODO(HOSTING_AND_ENV)`)**: Não há definição de servidor web,
+    ambiente de implantação ou rotina operacional de backup.
+
+Nenhuma hipótese sobre os itens pendentes acima DEVE ser tratada como obrigação até que seja
+explicitamente decidida e registrada no plano ou na constituição.
+
+## Diretrizes Condicionais para Capacidades Futuras
+
+- **OBRIGATÓRIO**: É PROIBIDO inventar funcionalidades de CRM, assumir multitenancy, impor
+  arquitetura distribuída, criar filas de mensageria ou estipular metas numéricas de desempenho sem
+  solicitação explícita.
+- **OBRIGATÓRIO**: Regras específicas para **multitenancy** (isolamento lógico/físico por
+  organização), **valores monetários** (precisão decimal, moedas, arredondamento), **anexos**
+  (armazenamento, limites de tamanho, validação de MIME/antivírus), **filas assíncronas** e
+  **integrações externas** somente DEVEM ser detalhadas e implementadas quando essas capacidades
+  forem confirmadas em spec própria.
+
+## Governança
+
+- **Autoridade Normativa**: Esta constituição prevalece sobre práticas informais e orienta todas as
+  etapas do fluxo Spec Kit (`/speckit-specify`, `/speckit-clarify`, `/speckit-plan`,
+  `/speckit-tasks`, `/speckit-analyze`, `/speckit-checklist`, `/speckit-implement` e
+  `/speckit-converge`) tanto no Antigravity quanto no Codex.
+- **Procedimento de Emenda**:
+  1. Qualquer alteração nos princípios ou regras desta constituição DEVE registrar a justificativa
+     da mudança, obter aprovação explícita do responsável pelo projeto e avaliar o impacto sobre
+     specs, planos, tarefas e código existentes.
+  2. Caso já existam regras compatíveis quando uma revisão for solicitada, as decisões compatíveis
+     DEVEM ser preservadas; eventuais conflitos com regras anteriores DEVEM ser informados ao
+     responsável antes de sua substituição.
+  3. A data de última alteração (`Last Amended`) e a versão (`Version`) DEVEM ser atualizadas a
+     cada emenda.
+- **Política de Versionamento Semântico (`MAJOR.MINOR.PATCH`)**:
+  - `MAJOR`: Remoção de princípio, redefinição incompatível de regra existente ou mudança de
+    governança que invalide decisões anteriores.
+  - `MINOR`: Adição de novo artigo/princípio, inclusão de decisões técnicas antes pendentes ou
+    expansão material das obrigações existentes.
+  - `PATCH`: Ajustes de redação, correções ortográficas ou esclarecimentos que não alterem o
+    sentido normativo das obrigações.
+- **Verificação de Conformidade**: Toda especificação, plano, lista de tarefas e revisão de
+  implementação DEVE verificar explicitamente a aderência aos artigos desta constituição antes de
+  sua aprovação.
+
+**Version**: 1.0.0 | **Ratified**: 2026-10-26 | **Last Amended**: 2026-10-26
