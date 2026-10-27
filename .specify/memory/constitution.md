@@ -1,30 +1,19 @@
 <!--
 Sync Impact Report
-- Version change: N/A (template inicial não preenchido) → 1.0.0
+- Version change: 1.0.0 → 1.1.0
 - Modified principles:
-  - [PRINCIPLE_1_NAME] → Artigo I. Idioma e Clareza
-  - [PRINCIPLE_2_NAME] → Artigo II. Simplicidade e Organização
-  - [PRINCIPLE_3_NAME] → Artigo III. Segurança, Privacidade e Segredos
-  - [PRINCIPLE_4_NAME] → Artigo IV. Integridade dos Dados
-  - [PRINCIPLE_5_NAME] → Artigo V. Confiabilidade e Operação
-- Added sections:
-  - Artigo VI. Qualidade e Evidências
-  - Artigo VII. Experiência de Uso e Desempenho
-  - Artigo VIII. Dependências e Compatibilidade
-  - Artigo IX. Living Spec e Rastreabilidade
-  - Artigo X. Governança Compartilhada e Exceções
-  - Contexto Técnico Vigente e Decisões Pendentes
-  - Diretrizes Condicionais para Capacidades Futuras
+  - Artigo III. Segurança, Privacidade e Segredos → Artigo III. Segurança, Privacidade e Menor Privilégio (expansão material para 10 incisos cobrindo validação, segurança da aplicação/OWASP, privilégios separados de runtime e migração, gestão e revogação de segredos, finalidade/base legal, retenção/descarte em bancos e backups, direitos dos titulares, proteção criptográfica, restrições ao uso de IA/MCP e resposta a incidentes)
+- Added sections: Nenhuma (expansão interna do Artigo III)
 - Removed sections: Nenhuma
 - Templates / artefatos verificados:
-  - ✅ .specify/memory/constitution.md (criado na versão 1.0.0)
-  - ✅ .cursorrules (preservado; compatível com Artigo I e Artigo IX)
+  - ✅ .specify/memory/constitution.md (atualizado para v1.1.0)
+  - ✅ .cursorrules (preservado; compatível)
 - Follow-up TODOs / Pendências técnicas (aguardando definição em specs/planos futuros):
   - TODO(STACK_PHP_VERSION): Definir versão alvo do PHP e extensões obrigatórias
   - TODO(FRAMEWORK_OR_ARCH): Definir uso de framework ou PHP puro e estrutura de diretórios
   - TODO(DATABASE_ENGINE): Definir SGBD, estratégia de conexão e ferramenta de migrações
   - TODO(QUALITY_TOOLCHAIN): Definir comandos de testes, análise estática e verificação de estilo
-  - TODO(HOSTING_AND_ENV): Definir ambiente de execução, servidor web e estratégia de backup
+  - TODO(HOSTING_AND_ENV): Definir ambiente de execução, servidor web, gestão de segredos/chaves e estratégia de backup
 -->
 
 # Constituição do Projeto spec-driven-php-crm
@@ -70,29 +59,61 @@ ambiguidades operacionais.
 **Racional**: O controle rigoroso de complexidade reduz o custo de manutenção e impede que
 abstrações especulativas dificultem a evolução do sistema.
 
-### Artigo III. Segurança, Privacidade e Segredos
+### Artigo III. Segurança, Privacidade e Menor Privilégio
 
-- **OBRIGATÓRIO**: Todas as entradas externas DEVEM ser validadas no servidor quanto a formato,
-  tipo, tamanho, limites e regras de negócio, independentemente de validações existentes no
-  cliente.
-- **OBRIGATÓRIO**: A autorização DEVE ser verificada explicitamente em cada operação protegida e
-  para cada recurso acessado. O sistema DEVE aplicar o princípio do menor privilégio e negar o
-  acesso por padrão (`deny by default`) na ausência de permissão explícita.
-- **OBRIGATÓRIO**: O sistema DEVE empregar mecanismos nativos ou consolidados da stack para
-  autenticação, hash seguro de senhas, proteção de sessões e mitigação de vulnerabilidades web
-  aplicáveis (incluindo SQL Injection, XSS, CSRF e fixation/hijacking de sessão).
-- **OBRIGATÓRIO**: É PROIBIDO versionar credenciais, tokens, chaves privadas, arquivos `.env` com
-  segredos, dumps de banco ou dados reais de clientes. Arquivos de exemplo de configuração DEVEM
-  conter exclusivamente valores fictícios e seguros.
-- **OBRIGATÓRIO**: Segredos DEVEM ser mantidos fora do código-fonte, carregados a partir da
-  configuração do ambiente e NUNCA expostos em logs, respostas de API/interface, documentação ou
-  mensagens de erro.
-- **OBRIGATÓRIO**: O sistema DEVE coletar, exibir e registrar apenas os dados pessoais estritamente
-  necessários à finalidade definida na spec. Testes automatizados ou manuais DEVEM utilizar apenas
-  dados sintéticos ou adequadamente anonimizados.
+1. **Validação e autorização.** Toda entrada externa DEVE ser validada no componente confiável que
+   a recebe, quanto a tipo, formato, tamanho, limites e regras aplicáveis. A autorização DEVE ser
+   verificada em cada operação protegida e para cada recurso acessado, aplicando menor privilégio e
+   negação por padrão.
+2. **Segurança da aplicação.** O sistema DEVE utilizar mecanismos consolidados de autenticação e
+   proteção de sessões, tokens ou outras credenciais, conforme a arquitetura adotada. O plano DEVE
+   identificar as ameaças aplicáveis e os controles verificáveis para mitigá-las, usando
+   referências como OWASP.
+3. **Privilégios de execução.** Em ambientes compartilhados e de produção, as identidades
+   utilizadas pela aplicação DEVEM ter somente as permissões necessárias ao funcionamento, sem
+   privilégios administrativos ou de alteração estrutural do banco. Migrações DEVEM utilizar
+   identidade separada, com permissões limitadas ao necessário e execução controlada. As
+   credenciais de migração NÃO DEVEM estar disponíveis ao runtime.
+4. **Segredos.** Segredos DEVEM permanecer fora do código-fonte e dos arquivos versionados (sendo
+   proibido versionar credenciais, tokens, chaves privadas, arquivos de ambiente com segredos,
+   dumps ou dados reais de clientes, e devendo exemplos de configuração conter somente valores
+   fictícios), sendo disponibilizados por mecanismo de configuração ou gestão de segredos adequado
+   ao ambiente. NÃO DEVEM ser expostos em logs, respostas, documentação, prompts ou saídas de
+   ferramentas. Deve existir procedimento de revogação e substituição em caso de exposição.
+5. **Finalidade e classificação.** O sistema DEVE coletar, exibir e registrar apenas os dados
+   pessoais necessários à finalidade definida. As especificações que envolvam dados pessoais DEVEM
+   identificar categorias de dados, finalidades, acessos e requisitos de compartilhamento. A base
+   legal e as obrigações aplicáveis DEVEM ser definidas ou validadas pelo responsável pelo
+   tratamento, sem serem presumidas pelo agente.
+6. **Retenção e descarte.** As especificações pertinentes DEVEM definir prazos ou critérios de
+   retenção, eventos que iniciam sua contagem e hipóteses justificadas de conservação. O plano DEVE
+   estabelecer descarte ou anonimização verificáveis, contemplando bancos, arquivos, logs, réplicas
+   e o ciclo de expiração dos backups. Restaurações NÃO DEVEM reintroduzir permanentemente dados
+   cuja eliminação já tenha sido determinada.
+7. **Direitos dos titulares.** O sistema DEVE permitir o atendimento dos direitos aplicáveis, com
+   verificação adequada da identidade do solicitante e registro do atendimento. Eliminação,
+   bloqueio e anonimização DEVEM respeitar obrigações de conservação e preservar a integridade
+   necessária dos registros. Exclusão lógica, mascaramento e pseudonimização NÃO DEVEM ser
+   apresentados como eliminação ou anonimização efetiva.
+8. **Proteção criptográfica.** Dados classificados como confidenciais ou sensíveis DEVEM ser
+   protegidos em trânsito e em repouso, incluindo suas cópias de segurança. O plano DEVE definir o
+   alcance dessa proteção e a gestão das chaves, com controle de acesso e separação adequada dos
+   dados protegidos. Senhas usadas para autenticação DEVEM ser armazenadas por hash específico para
+   senhas, com salt e parâmetros adequados.
+9. **Uso de IA no desenvolvimento.** É PROIBIDO disponibilizar dados pessoais reais de clientes,
+   segredos ou conteúdo confidencial de produção aos assistentes de desenvolvimento, inclusive por
+   arquivos, prompts, logs, terminal, MCP ou resultados de consultas. Utilizar dados sintéticos ou
+   dados cuja anonimização tenha sido validada. Esquemas e metadados também DEVEM ser revisados
+   antes de serem disponibilizados. Arquivos de ignore NÃO DEVEM ser tratados como barreira
+   suficiente de acesso.
+10. **Evidência e resposta a incidentes.** Os controles acima DEVEM possuir verificações
+    proporcionais ao risco. Antes da operação com dados reais, DEVEM estar definidos responsáveis e
+    procedimentos para identificar, conter e tratar incidentes, preservando evidências e apoiando
+    as comunicações legalmente aplicáveis.
 
-**Racional**: Um CRM lida com informações comerciais e pessoais sensíveis; segurança e privacidade
-são requisitos estruturais inegociáveis desde a primeira linha de código.
+**Racional**: Um CRM manipula dados pessoais e estratégicos; a aplicação estrita de menor
+privilégio (inclusive entre runtime, migrações e assistentes de IA), ciclo de vida de dados e
+controles criptográficos e de resposta a incidentes garante conformidade legal e proteção efetiva.
 
 ### Artigo IV. Integridade dos Dados
 
@@ -266,7 +287,8 @@ A inspeção do repositório na data desta versão confirma o seguinte estado re
   - **Ferramentas de Qualidade (`TODO(QUALITY_TOOLCHAIN)`)**: Não há suíte de testes, analisador
     estático ou verificador de estilo configurados.
   - **Hospedagem e Operação (`TODO(HOSTING_AND_ENV)`)**: Não há definição de servidor web,
-    ambiente de implantação ou rotina operacional de backup.
+    ambiente de implantação, mecanismo de gestão de segredos/chaves ou rotina operacional de
+    backup.
 
 Nenhuma hipótese sobre os itens pendentes acima DEVE ser tratada como obrigação até que seja
 explicitamente decidida e registrada no plano ou na constituição.
@@ -308,4 +330,4 @@ explicitamente decidida e registrada no plano ou na constituição.
   implementação DEVE verificar explicitamente a aderência aos artigos desta constituição antes de
   sua aprovação.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-26 | **Last Amended**: 2026-10-26
+**Version**: 1.1.0 | **Ratified**: 2026-10-26 | **Last Amended**: 2026-10-26
