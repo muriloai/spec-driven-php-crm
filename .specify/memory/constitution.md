@@ -1,12 +1,12 @@
 <!--
 Sync Impact Report
-- Version change: 1.0.0 → 1.1.0
+- Version change: 1.1.0 → 1.2.0
 - Modified principles:
-  - Artigo III. Segurança, Privacidade e Segredos → Artigo III. Segurança, Privacidade e Menor Privilégio (expansão material para 10 incisos cobrindo validação, segurança da aplicação/OWASP, privilégios separados de runtime e migração, gestão e revogação de segredos, finalidade/base legal, retenção/descarte em bancos e backups, direitos dos titulares, proteção criptográfica, restrições ao uso de IA/MCP e resposta a incidentes)
-- Added sections: Nenhuma (expansão interna do Artigo III)
+  - Artigo VI. Qualidade e Evidências → Artigo VI. Qualidade, Testes Proporcionais ao Risco e Evidências (expansão material para incorporar regras de geração de testes proporcionais ao risco, proibição de testes redundantes/espelhados na implementação, reúso de fixtures/suíte existente, escopo de testes justificado no plano, uso controlado e justificado de mocks, vedação de alterações arquiteturais em produção apenas para facilitar mocks e registro obrigatório da validação realizada e suas limitações)
+- Added sections: Nenhuma (expansão interna do Artigo VI)
 - Removed sections: Nenhuma
 - Templates / artefatos verificados:
-  - ✅ .specify/memory/constitution.md (atualizado para v1.1.0)
+  - ✅ .specify/memory/constitution.md (atualizado para v1.2.0)
   - ✅ .cursorrules (preservado; compatível)
 - Follow-up TODOs / Pendências técnicas (aguardando definição em specs/planos futuros):
   - TODO(STACK_PHP_VERSION): Definir versão alvo do PHP e extensões obrigatórias
@@ -162,29 +162,46 @@ recuperabilidade dos dados persistidos.
 **Racional**: Sistemas de negócio precisam ter comportamento previsível sob falha e capacidade
 comprovada de diagnóstico, auditoria e recuperação.
 
-### Artigo VI. Qualidade e Evidências
+### Artigo VI. Qualidade, Testes Proporcionais ao Risco e Evidências
 
-- **OBRIGATÓRIO**: Regras de negócio críticas, controles de autorização e a integridade dos fluxos
-  criados ou alterados DEVEM ser verificados por testes automatizados.
-- **OBRIGATÓRIO**: Toda correção de bug DEVE incluir teste automatizado de regressão quando viável.
-  Quando a automação não for tecnicamente viável, o responsável DEVE registrar a justificativa e a
-  evidência da verificação alternativa executada.
-- **OBRIGATÓRIO**: A suíte de testes DEVE priorizar cenários relevantes de negócio, casos de borda,
-  limites e caminhos de falha. Não se DEVE adotar um percentual arbitrário de cobertura de código
-  como prova isolada de qualidade.
-- **OBRIGATÓRIO**: O plano de implementação (`plan.md`) DEVE especificar os comandos exatos e
-  reproduzíveis para execução de testes, análise estática e verificação de estilo apropriados à
-  stack definida.
-- **OBRIGATÓRIO**: Todas as verificações aplicáveis DEVEM ser efetivamente executadas antes de
-  declarar uma tarefa ou entrega como concluída. O relatório de entrega DEVE informar os comandos
-  executados, os resultados obtidos, eventuais falhas e quaisquer verificações não executadas com
-  seus respectivos impedimentos.
-- **OBRIGATÓRIO**: É PROIBIDO desativar verificações, suprimir alertas sem justificativa técnica,
-  enfraquecer asserções de testes ou alterar critérios de aceite da spec apenas para forçar a
-  aprovação de uma entrega.
+1. **Testes proporcionais ao risco.** A criação de testes automatizados DEVE ser proporcional ao
+   risco da alteração, priorizando regras de negócio críticas, controles de autorização,
+   regressões, contratos e integridade dos fluxos críticos criados ou alterados, incluindo cenários
+   de falha e limites. Não se DEVE adotar um percentual arbitrário de cobertura de código como
+   prova isolada de qualidade.
+2. **Vedação de testes artificiais ou redundantes.** É PROIBIDO criar testes automaticamente para
+   cada classe ou método sem necessidade ligada ao risco, bem como criar testes que apenas
+   reproduzam a estrutura interna da implementação ou dupliquem cobertura já existente.
+3. **Reúso da estrutura de testes existente.** Antes de criar novos testes, o responsável DEVE
+   verificar e reutilizar a suíte, as fixtures e os recursos de teste existentes no projeto. É
+   PROIBIDO criar mocks, fixtures ou infraestrutura de teste duplicados, dispersos ou sem uso,
+   devendo-se seguir a organização vigente no repositório.
+4. **Planejamento explícito do escopo de validação.** O plano de implementação (`plan.md`) DEVE
+   identificar os comportamentos a validar, justificar os novos testes necessários e especificar os
+   comandos reproduzíveis de testes, análise estática e verificação de estilo apropriados à stack
+   escolhida. A implementação DEVE seguir estritamente esse escopo planejado.
+5. **Uso controlado e justificado de mocks.** Mocks DEVEM ser utilizados somente quando o
+   isolamento da dependência for estritamente necessário para o cenário testado, com justificativa
+   explícita registrada no plano (`plan.md`).
+6. **Limites ao uso de mocks e preservação da arquitetura.** É PROIBIDO mockar o próprio
+   comportamento que se pretende verificar ou substituir por mocks a integração cuja correção está
+   sendo avaliada. É PROIBIDO alterar a arquitetura de produção (como introduzir interfaces ou
+   indireções desnecessárias) exclusivamente para facilitar a criação de mocks sem justificativa
+   técnica real.
+7. **Correções de bugs e regressão.** Correções de bugs DEVEM incluir teste automatizado de
+   regressão quando viável. Quando não for viável, o responsável DEVE registrar o motivo e a
+   verificação alternativa realizada.
+8. **Execução real e registro de evidências.** Toda alteração DEVE registrar como foi validada, e
+   as verificações aplicáveis DEVEM ser executadas de fato antes de afirmar que passaram. O
+   relatório de entrega DEVE informar os comandos executados, resultados, falhas e verificações não
+   executadas com seus impedimentos. Quando não houver novos testes automatizados, DEVE-SE informar
+   explicitamente a verificação realizada e suas limitações.
+9. **Integridade das verificações.** É PROIBIDO desativar verificações, enfraquecer testes ou
+   alterar critérios de aceite apenas para obter aprovação da entrega.
 
-**Racional**: Qualidade verificável baseia-se em evidências reais e reproduzíveis de funcionamento
-nos cenários críticos, e não em métricas artificiais ou declarações não comprovadas.
+**Racional**: Testes devem proteger o comportamento de negócio e os contratos reais do sistema com
+alto sinal e baixo ruído, evitando suítes frágeis acopladas à implementação, proliferação de mocks
+artificiais e distorções na arquitetura de produção.
 
 ### Artigo VII. Experiência de Uso e Desempenho
 
@@ -330,4 +347,4 @@ explicitamente decidida e registrada no plano ou na constituição.
   implementação DEVE verificar explicitamente a aderência aos artigos desta constituição antes de
   sua aprovação.
 
-**Version**: 1.1.0 | **Ratified**: 2026-10-26 | **Last Amended**: 2026-10-26
+**Version**: 1.2.0 | **Ratified**: 2026-10-26 | **Last Amended**: 2026-10-27
